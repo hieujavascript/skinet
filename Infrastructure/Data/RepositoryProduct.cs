@@ -21,15 +21,21 @@ namespace Infrastructure.Data
             return await _context.ProductBrands.ToListAsync();
         }
 
-        public async Task<Product> getProductIdAsync(int id)
+        public async Task<Product> getProductByIdAsync(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                                .Include(b => b.ProductBrand)
+                                .Include(t => t.ProductType)
+                                .FirstOrDefaultAsync(p => p.Id == id);
+                         
             return product;
         }
-
         public async Task<IEnumerable<Product>> getProductsAsync()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _context.Products
+                            .Include(b => b.ProductBrand)
+                            .Include(t => t.ProductType)
+                            .ToListAsync();
             return products;
         }
 

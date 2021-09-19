@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210910105007_InitialCreate")]
+    [Migration("20210916024118_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,13 +86,13 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Core.Entity.Product", b =>
                 {
                     b.HasOne("Core.Entity.ProductBrand", "ProductBrand")
-                        .WithMany("products")
+                        .WithMany()
                         .HasForeignKey("ProductBrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Core.Entity.ProductType", "ProductType")
-                        .WithMany("products")
+                        .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -100,16 +100,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("ProductBrand");
 
                     b.Navigation("ProductType");
-                });
-
-            modelBuilder.Entity("Core.Entity.ProductBrand", b =>
-                {
-                    b.Navigation("products");
-                });
-
-            modelBuilder.Entity("Core.Entity.ProductType", b =>
-                {
-                    b.Navigation("products");
                 });
 #pragma warning restore 612, 618
         }

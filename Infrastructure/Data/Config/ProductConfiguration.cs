@@ -14,9 +14,8 @@ namespace Infrastructure.Data.Config
             builder.Property(p => p.Price).HasColumnType("decimal(18,2)");
             builder.Property(p => p.PictureUrl).IsRequired();
              // 1 Brand thì có nhiều Product Quan he 1 - n
-            builder.HasOne(p => p.ProductBrand).WithMany(b => b.products).HasForeignKey(p => p.ProductBrandId);
-            builder.HasOne(p => p.ProductType).WithMany(pt => pt.products).HasForeignKey(p => p.ProductTypeId);
-                                         
+            builder.HasOne(p => p.ProductBrand).WithMany().HasForeignKey(p => p.ProductBrandId);
+            builder.HasOne(p => p.ProductType).WithMany().HasForeignKey(p => p.ProductTypeId);                                         
         }
     }
 }

@@ -1,4 +1,5 @@
 
+using API.helper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -29,12 +30,17 @@ namespace API
         {
 
             services.AddScoped<IRepositoryProduct , RepositoryProduct>();
+            services.AddScoped((typeof(IGenericRepository<>))  , (typeof(GenericRepository<>)));
             services.AddControllers();
+            services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
             services.AddDbContext<StoreContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // chúng ta thêm các Middleware muốn làm gì đó trước khi gửi Request
@@ -51,7 +57,7 @@ namespace API
             app.UseHttpsRedirection(); // đây là 1 middleware
 
             app.UseRouting();
-
+            app.UseStaticFiles(); // static file
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
