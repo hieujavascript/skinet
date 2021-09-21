@@ -1,9 +1,14 @@
 
+using System.Data;
+using System.Linq;
+using API.Error;
+using API.Extensions;
 using API.helper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +34,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddScoped<IRepositoryProduct , RepositoryProduct>();
-            services.AddScoped((typeof(IGenericRepository<>))  , (typeof(GenericRepository<>)));
+          
             services.AddControllers();
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddSwaggerGen(c =>
@@ -38,9 +42,9 @@ namespace API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
             services.AddDbContext<StoreContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
+            services.AddApplicationServices();
+            services.AddSwaggerDocumentation();
+            
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // chúng ta thêm các Middleware muốn làm gì đó trước khi gửi Request
@@ -53,13 +57,14 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
+            // "/errors/{0}" chinh la [Route("errors/{statusCode}")] trogn error Controller
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection(); // đây là 1 middleware
-
             app.UseRouting();
             app.UseStaticFiles(); // static file
             app.UseAuthorization();
-
+            app.UseSwaggerDocumentation(); // extension
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
