@@ -36,9 +36,6 @@ namespace Infrastructure.Data
            var t_Entity  = await tableName.FindAsync(id);
            return t_Entity;
         }
-
-        
-
         public async Task<List<T>> ListAllAsync()
         {
             var tl_Entity = await tableName.ToListAsync();
@@ -57,8 +54,15 @@ namespace Infrastructure.Data
               return list;
         }
         public IQueryable<T> ApplySpecification(ISpecification<T> spec) {
+            // nó sẽ trả về 1 câu Query với where , include , orderby , orderbyDescending v... đc truyền vào từ Spec
+            // thông qua controller khi gọi ListAsync , GetEntityWithSpec
              var my_IQueryable = SpecificationEvaluator<T>.MakeQuery(_storeContext.Set<T>().AsQueryable() , spec);
             return my_IQueryable;
+        }
+
+        public Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return ApplySpecification(spec).CountAsync();
         }
     }
 }

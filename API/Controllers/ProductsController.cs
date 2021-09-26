@@ -12,6 +12,8 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using API.Error;
+using Core;
+using API.helper;
 
 namespace API.Controllers
 {
@@ -36,14 +38,21 @@ namespace API.Controllers
             this._mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<List<ProductToReturnDto>>> getProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> getProducts([FromQuery]ProductSpecParams productSpecParams)
         {
            // var products = await _repoProduct.ListAllAsync();
-           var spec = new ProductsWithTypesAndBrandSpecication();           
+           var spec = new ProductsWithTypesAndBrandSpecication(productSpecParams);
+           // đếm toàn bộ dữ liệu ko hề có sort , filter                      
+           var countSpect = new ProductWithFiltersForCountSpecification(productSpecParams);
+           var totalItems = await _repoProduct.CountAsync(countSpect);
+
            var products = await _repoProduct.ListAsync(spec);
            //var productdto = products.AsQueryable().ProjectTo<ProductToReturnDto>(_mapper.ConfigurationProvider).ToList();
-           var productdto =  _mapper.Map<List<Product> , List<ProductToReturnDto>>(products);
-           return productdto;    
+           var data =  _mapper.Map<List<Product> , List<ProductToReturnDto>>(products);
+           var dataPagination = new Pagination<ProductToReturnDto>(productSpecParams.PageIndex , 
+           productSpecParams.PageSize , totalItems  , data
+           );
+           return Ok(dataPagination);    
         }
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
