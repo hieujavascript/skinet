@@ -28,7 +28,7 @@ namespace Core.Specifications
             OrderBy = orderby_spec;
         }
           protected void AddOrderByDescing(Expression<Func<T , object>> orderbydescing_spec) {
-            OrderBy = orderbydescing_spec;
+            OrderByDescending = orderbydescing_spec;
         }
 
          public int Take {get; private set;}

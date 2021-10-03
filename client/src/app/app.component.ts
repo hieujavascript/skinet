@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { IPagination } from './models/IPagination';
-import { IProduct } from './models/IProduct';
+import { IPagination } from './shared/models/IPagination';
+import { IProduct } from './shared/models/IProduct';
+import { ShopService } from './shop/shop.service';
 
 @Component({
   selector: 'app-root',
@@ -9,17 +10,12 @@ import { IProduct } from './models/IProduct';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-public products: IProduct[];
-constructor (private http: HttpClient) {
+
+constructor () {
 
 }
   ngOnInit(): void {
-   this.http.get("https://localhost:5001/api/products").subscribe((response:IPagination) => {
-     this.products = response.data;
-   } , 
-   error => {
-    console.log(error);
-   })
+  
   }
 
 }

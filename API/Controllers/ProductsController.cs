@@ -71,7 +71,6 @@ namespace API.Controllers
         public async Task<ActionResult<List<ProductBrand>>> getProductBrands() {
             var productbrands = await _repoProductBrand.ListAllAsync();
             return productbrands;
-
         }
         [HttpGet("types")]
         public async Task<ActionResult<List<ProductType>>> getProductTypes(){
