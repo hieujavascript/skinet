@@ -6,13 +6,15 @@ import { IType } from '../shared/models/ProductType';
 import { ShopService } from './shop.service';
 import {ShopParams} from "../shared/models/shopparams";
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BreadcrumbService } from 'xng-breadcrumb';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
-  @ViewChild('search', {static: true}) searchTerm: ElementRef;
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
  products: IProduct[];
  brands: IBrand[];
  types: IType[]
@@ -24,7 +26,12 @@ export class ShopComponent implements OnInit {
     { name: 'Price: Hight To Low' , value: 'priceDesc'}
  ]
 
-  constructor(private shopService : ShopService , private cdr: ChangeDetectorRef) {}
+  constructor(
+    private shopService : ShopService , 
+    private cdr: ChangeDetectorRef , // fix lỗi dữ liệu load trước template    
+    ) {
+      
+    }
   ngOnInit(): void {
    this.getProduct();
    this.getBrand();
@@ -35,8 +42,8 @@ export class ShopComponent implements OnInit {
       this.products = response.data;
       this.totalCount = response.count;
       this.shopParam.totalCountParams = response.count;
-      console.log("total :"+this.totalCount + ", param : " + this.shopParam.totalCountParams);
-
+      //console.log("total :"+this.totalCount + ", param : " + this.shopParam.totalCountParams);
+     
     } , 
     error => {
      console.log(error);
@@ -83,9 +90,6 @@ export class ShopComponent implements OnInit {
      this.cdr.detectChanges();
    }
   }
-  ngAfterViewInit() {
-   
-   }
   onSearch() {
     this.shopParam.search  = this.searchTerm.nativeElement.value;
     this.getProduct();

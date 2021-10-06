@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     // overide thực thi lai phương thức Route , chạy khi bị nhận lỗi
-    [Route("errors/{statusCode}")] 
+    [Route("errors/{code}")] 
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController  : BaseApiController
     {
-        public IActionResult Error(int statusCode) {
-            return new ObjectResult(new ApiResponse(200));
+        public IActionResult Error(int code) {
+            return new ObjectResult(new ApiResponse(code));
         }
     }
 }
