@@ -15,7 +15,7 @@ namespace API.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services) {
             services.AddScoped<IRepositoryProduct , RepositoryProduct>();
             services.AddScoped((typeof(IGenericRepository<>))  , (typeof(GenericRepository<>)));
-
+            services.AddScoped<IBasketRepository , BasketRepository>();
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
