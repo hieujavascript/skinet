@@ -1,7 +1,12 @@
 using System;
 using System.Threading.Tasks;
+using Core.Entity.Identity;
+using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.Identity;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,10 +28,10 @@ namespace API
                 await context.Database.MigrateAsync();
                 await ContextSeed.SeedAsync(context, loggerFactory);
                 
-              //  var userManager = services.GetRequiredService<UserManager<AppUser>>();
-              //  var identityContext = services.GetRequiredService<AppIdentityDbContext>();
-             //   await identityContext.Database.MigrateAsync();
-              //  await AppIdentityDbContextSeed.SeedUsersAsync(userManager);
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                var identityContext = services.GetRequiredService<AppIdentityDBContext>();
+                await identityContext.Database.MigrateAsync();
+                await AppIdentityUserContextSeed.SeedUserAsync(userManager);
             }
             catch (Exception ex)
             {

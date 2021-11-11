@@ -30,13 +30,17 @@ export class ShopService {
     if(shopParams.search != null) {
       params = params.append('search', shopParams.search);
     }
-
+   
     params = params.append("pageIndex" , shopParams.pageNumber.toString());
     params = params.append("pageIndex" , shopParams.pageSize.toString());
 
+    // dự đoán ko chắc : nhưng {observe:"response" , params} nó sẽ truyền dữ liệu ngầm vào URL dạng như
+    // https://localhost:5001/api/products?typeId=1&brandId=1&sort=priceDesc&pageIndex=1&pageIndex=6
+    // ko xuất hiện Page = 1 , pagesize = 2 trên trình duyệt dạng như localhost:50001?pase=1,pageindex=2
     return this.http.get<IPagination>(this.baseUrl + "products" , {observe:"response" , params})
                     .pipe(map(response => {
-                      return response.body; // lay body trong http response
+                     // console.log(response);
+                      return response.body; // lay body trong http response , trả dữ liệu về cho file .ts
                     }))
   }
   getBrand() {

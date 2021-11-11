@@ -1,0 +1,38 @@
+<div class="d-flex justify-content-center mt-5">
+    <div class="col-3">
+      <form  [formGroup]="registerForm" (ngSubmit) = "submitForm()" >
+        <div class="text-center mb-4">        
+          <h1 class="h3 mb-3 font-weight-normal">Register</h1>     
+        </div>
+        <app-text-input formControlName="displayName" [label]="'Display Name '"></app-text-input>
+
+        <app-text-input formControlName="email" [label]="'Email address'"></app-text-input>
+    
+        <app-text-input formControlName="password" [label]="'password'" [type] = "'password'" ></app-text-input>
+        <app-images-button  formControlName="server" id="server" ></app-images-button>
+        <!-- <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div> -->
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 text-muted text-center">© 2017-2018</p>
+      </form>    
+    </div>
+    <div class="col-4 mt-5 text-danger" >
+      <!-- <p>
+        formStatus : {{registerForm.status}}
+      </p>
+      <p> emailStatus: {{registerForm.get('email').status}} </p>
+      <p> emailTouch: {{registerForm.get('email').touched}} </p>
+      <p> emailDirty: {{registerForm.get('email').dirty}} </p>
+      <p> formValue : {{registerForm.value | json}} </p> -->
+      
+      <ul *ngIf="myerror.length > 0">
+        <li *ngFor="let err of myerror">
+          <p> {{err}} </p>
+        </li>
+      </ul>
+
+    </div>
+  </div>

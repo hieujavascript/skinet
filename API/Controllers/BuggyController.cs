@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using API.Error;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,7 +14,8 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet("testauth")]        
+        [HttpGet("testauth")]
+        [Authorize]        
         public ActionResult<string> GetSecretText()
         {
             return "secret stuff";

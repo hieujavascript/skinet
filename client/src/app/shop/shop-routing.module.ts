@@ -7,7 +7,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {path: '', component: ShopComponent} ,
-  {path: ":id" , component: ProductDetailsComponent , data: {breadcrumb: {alias: 'ProductItems'}}},
+  // {path: ":id" , component: ProductDetailsComponent , data: {breadcrumb: {alias: 'ProductItems'}}},
+   {path: ':id',  component: ProductDetailsComponent,  data: {breadcrumb: {alias: 'productDetails'}}},
+ // {path: ":id" , component: ProductDetailsComponent},
 ];
 
 @NgModule({

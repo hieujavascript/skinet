@@ -97,7 +97,7 @@ export class ShopComponent implements OnInit {
   }
   onReset() {
     this.searchTerm.nativeElement.value = '';
-    this.shopParam = new ShopParams();// khởi tạo lại tham số mac định
+    this.shopParam = new ShopParams();// khởi tạo lại tham số mac định tat ca deu null chi co name ,pageindex , pagesize co du lieu mac dinh
     this.getProduct();
   }
 }

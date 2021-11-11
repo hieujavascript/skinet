@@ -13,8 +13,9 @@ namespace Infrastructure.Data
     public class BasketRepository : IBasketRepository
     {
         private readonly IDatabase _database;
-        public BasketRepository(IConnectionMultiplexer redis)
+        public BasketRepository(IConnectionMultiplexer redis) // Su Dung Redis
         {
+            // doc du lieu tu database luu tru o o cung client
             _database = redis.GetDatabase();
         }
 
@@ -35,8 +36,8 @@ namespace Infrastructure.Data
         {
          var created = await _database.StringSetAsync(
                                      customerBasket.Id , 
-                                     JsonSerializer.Serialize(customerBasket) ,
-                                     TimeSpan.FromDays(30));
+                                     JsonSerializer.Serialize(customerBasket) , 
+                                     TimeSpan.FromDays(30)); // du lieu ton tai trong 30 ngay
             // nếu lỗi chưa tạo đc thì trả về null                                 
             if(!created) return null;
             

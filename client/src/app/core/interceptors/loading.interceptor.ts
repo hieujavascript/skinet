@@ -8,7 +8,12 @@ import { BusyServiceService } from "../busy-service.service";
 export class LoadingInterceptor implements HttpInterceptor {
     constructor(private busyService: BusyServiceService){}
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        this.busyService.busy();
+        
+        if(!req.url.includes("emailexists"))
+        {
+            this.busyService.busy(); // xuat hien man hinh pacman loading
+        }
+        
         return next.handle(req).pipe(
             delay(500),
             finalize(()=> {               

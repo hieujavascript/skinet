@@ -1,20 +1,17 @@
-
-using System.Data;
-using System.Linq;
-using API.Error;
 using API.Extensions;
 using API.helper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
+using Infrastructure.Data.Identity;
+using Infrastructure.service;
 
 namespace API
 {
@@ -33,7 +30,9 @@ namespace API
         // add các DependencyInjector
         public void ConfigureServices(IServiceCollection services)
         {          
+
             services.AddControllers();
+            services.AddScoped<ITokenService , TokenService>();
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddSwaggerGen(c =>
             {
@@ -41,12 +40,18 @@ namespace API
             });
             services.AddDbContext<StoreContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
 
+// ket nối database Identity đc tạo bằng Migration
+            services.AddDbContext<AppIdentityDBContext>(x => {
+                x.UseSqlite(_config.GetConnectionString("IdentityContext"));
+            });
+//  connection voi Redis
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
                 var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
                 return ConnectionMultiplexer.Connect(configuration);
             });
-            services.AddApplicationServices();
+            services.AddApplicationServices(); // static class dùng đê add chia nhỏ service cho dễ quản lý
+            services.AddIdentityService(_config); // extension class cấu hình IdentityCore
             services.AddSwaggerDocumentation(); // test như là posman
              services.AddCors(opt =>
             {
@@ -75,7 +80,10 @@ namespace API
             app.UseRouting();
             app.UseStaticFiles(); // static file
             app.UseCors("CorsPolicy");
+            
+            app.UseAuthentication(); // Authentication phai di truoc Authorization , để đảm bảo xác thực mới đc phép làm gì
             app.UseAuthorization();
+            
             app.UseSwaggerDocumentation(); // extension
             app.UseEndpoints(endpoints =>
             {
